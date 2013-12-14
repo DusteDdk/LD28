@@ -209,14 +209,13 @@ void initLevel(int l)
 
 	int i=0;
 	memset( moves, 0, MAXMOVES);
-	moves[i++] = 'u';
 	moves[i++] = 'd';
 	moves[i++] = 'd';
 	moves[i++] = 'u';
+	moves[i++] = 'u';
 	moves[i++] = 'd';
 	moves[i++] = 'u';
 	moves[i++] = 'u';
-
 
 	cmIdx = 0;
 	cmTl = MOVETIME;
