@@ -226,7 +226,7 @@ void initLevel(int l)
 	fieldStop=0;
 
 	sprintf(levelName, "level%i.lvl", l);
-	eoLoadScene( Data("/", levelName), objInit);
+	eoLoadScene( Data("/data/lvl/", levelName), objInit);
 
 
 
