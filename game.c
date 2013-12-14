@@ -107,10 +107,10 @@ void playerThink( engObj_s* o)
   {
 	  if( playerMove == 'u' )
 	  {
-		  o->pos.y += 0.6;
+		  o->pos.y += 0.65;
 	  } else if( playerMove == 'd' )
 	  {
-		  o->pos.y -= 0.6;
+		  o->pos.y -= 0.65;
 	  } else if( playerMove == 'f' )
 	  {
 
@@ -211,11 +211,11 @@ void initLevel(int l)
 	memset( moves, 0, MAXMOVES);
 	moves[i++] = 'd';
 	moves[i++] = 'd';
-	moves[i++] = 'u';
-	moves[i++] = 'u';
 	moves[i++] = 'd';
-	moves[i++] = 'u';
-	moves[i++] = 'u';
+	moves[i++] = 'd';
+	moves[i++] = 'd';
+	moves[i++] = 'd';
+	moves[i++] = 'd';
 
 	cmIdx = 0;
 	cmTl = MOVETIME;
