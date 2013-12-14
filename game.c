@@ -17,8 +17,8 @@ int cmCd=0;
 #define MOVETIME 250;
 #define COOLDOWN 550;
 
-
-
+engObj_s* player;
+sprite_base* heartSpriteBase;
 char moves[MAXMOVES];
 
 guiContext* hud;
@@ -102,6 +102,7 @@ void playerThink( engObj_s* o)
   o->rot.x +=3;
   o->vel.x = 0.6;
 
+
   if( playerMove )
   {
 	  if( playerMove == 'u' )
@@ -121,7 +122,9 @@ void playerThink( engObj_s* o)
 
 void playerHit(engObj_s* a, engObj_s* b)
 {
+	eoObjDel(player);
 	eoExec("echo You suck.");
+
 }
 
 void initGame()
@@ -131,6 +134,8 @@ void initGame()
 	win->showTitle=FALSE;
 	state = GSTATE_NON;
 	eoRegisterStartFrameFunc(frameStart);
+
+	heartSpriteBase = eoSpriteBaseLoad( Data("/data/gfx/", "heartparticle.spr"));
 }
 
 void startNewGame()
@@ -149,6 +154,7 @@ void objInit(engObj_s* o)
 		o->pos.z = 0;
 	} else if( strcmp( o->className, "player" ) == 0 )
 	{
+		player = o;
 		o->colTeam = 2;
 		o->thinkFunc = playerThink;
 		o->colFunc = playerHit;
@@ -158,25 +164,26 @@ void objInit(engObj_s* o)
 		  engObj_s* parEmit = eoObjCreate(ENGOBJ_PAREMIT);
 		  particleEmitter_s* playerEmitter = eoPsysNewEmitter();
 		  playerEmitter->addictive=1;
-		  playerEmitter->numParticlesPerEmission = 5;
+		  playerEmitter->numParticlesPerEmission = 2;
 		  playerEmitter->ticksBetweenEmissions = 1;
 		  playerEmitter->particleLifeMax = 500;
 		  playerEmitter->particleLifeVariance = 400;
-		  playerEmitter->shrink=1;
+		  playerEmitter->shrink=0;
 		  playerEmitter->fade=0;
 		  playerEmitter->percentFlicker=60;
-		  playerEmitter->sizeMax=0.10;
-		  playerEmitter->sizeVariance=0.07;
+		  playerEmitter->sizeMax=0.010;
+		  playerEmitter->sizeVariance=0.005;
 		  playerEmitter->rotateParticles=0;
-		  playerEmitter->colorVariance[0]=0.1;
-		  playerEmitter->colorVariance[1]=0.9;
-		  playerEmitter->colorVariance[2]=0.9;
+		  playerEmitter->colorVariance[0]=0;
+		  playerEmitter->colorVariance[1]=0;
+		  playerEmitter->colorVariance[2]=0;
 		  playerEmitter->colorVariance[3]=0;
 		  playerEmitter->color[0]=1;
 		  playerEmitter->color[1]=1;
 		  playerEmitter->color[2]=1;
-		  playerEmitter->emitSpeedMax=1;
+		  playerEmitter->emitSpeedMax=3;
 		  playerEmitter->emitSpeedVariance=0.5;
+		  playerEmitter->sprBase=heartSpriteBase;
 		  eoPsysBake(playerEmitter);
 		  parEmit->emitter = playerEmitter;
 		  parEmit->offsetPos.x = -1.4;

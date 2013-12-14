@@ -1,0 +1,7 @@
+file=data/gfx/heartparticle.png
+framex=128
+framey=128
+frames=1
+ticks=1000
+rows=1
+cols=1
