@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 cd libeo
-make -f Makefile.linux ARCH=x64 debug
+make -f Makefile.linux ARCH=$1 debug
 cd ..
-make -f Makefile.linux ARCH=x64 debug
-./game_x64.bin 1280 800
+make -f Makefile.linux ARCH=$1 debug
+./game_"$1".bin 1280 800
