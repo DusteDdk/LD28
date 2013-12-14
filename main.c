@@ -10,9 +10,14 @@
 
 #include "libeo/eng.h"
 
+#include "menu.h"
+
 #ifndef DATADIR
   #define DATADIR "."
 #endif
+
+#define STATE_MAINMENU 1
+int state=STATE_MAINMENU;
 
 
 
@@ -22,10 +27,7 @@ void inpQuitFunc(inputEvent* e )
   eoQuit();
 }
 
-void frameStart()
-{
 
-}
 
 
 void objInitFunc( engObj_s* o)
@@ -43,28 +45,10 @@ int main(int argc, char *argv[])
   //Enable mouse-selection
   //eoGameEnableMouseSelection(0.2);
 
-  eoExec("testbox 1");
-
-
-  p.x = 0;
-  p.y = 2.5;
-  p.z = 0;
-  eoCamPosSet( p );
-  p.x = 0;
-  p.y = 0;
-  p.z = -10;
-  eoCamTargetSet( p );
-
-  eoExec( "camfree 1" );
-
-  eoGuiWarpMouse( eoSetting()->res.x/2, eoSetting()->res.y/2 );
-
  
   //Un-Pause simulation
   eoPauseSet(FALSE);
 
-  //Register callback function
-  eoRegisterStartFrameFunc( frameStart );
 
   //Set some GL light stuffs
   GLfloat global_ambient[] = { 0.2f, 0.2f, 0.2f, 2.0f };
@@ -80,7 +64,17 @@ int main(int argc, char *argv[])
   eoInpAddFunc( "exit", "Exit the game.", inpQuitFunc, INPUT_FLAG_DOWN);
   eoExec("bind esc exit");
 
-  eoExec("echo LD28 template. Wofakin ho!");
+  eoExec("echo You only get one.!");
+
+  eoPrint("InitGame");
+  initGame();
+  eoPrint("InitMenu");
+  initMenu();
+  eoPrint("SetMenu");
+  setMenu();
+
+
+
   eoMainLoop();
 
   return 0;

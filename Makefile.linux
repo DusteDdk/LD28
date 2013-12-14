@@ -19,7 +19,7 @@ else
   LIBS += -l:./libExcessiveOverkill_x64.so
 endif
 
-OBJS = main.o
+OBJS = main.o menu.o game.o
 
 MYCC = $(CC) $(CFLAGS) $(INCS) $(DEFS)
 
