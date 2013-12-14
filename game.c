@@ -14,8 +14,8 @@ int cmTl = 1000;
 int cmCd=0;
 
 #define MAXMOVES  128
-#define MOVETIME 250;
-#define COOLDOWN 550;
+#define MOVETIME 200;
+#define COOLDOWN 400;
 
 engObj_s* player;
 sprite_base* heartSpriteBase;
@@ -107,10 +107,10 @@ void playerThink( engObj_s* o)
   {
 	  if( playerMove == 'u' )
 	  {
-		  o->pos.y += 0.65;
+		  o->pos.y += 0.8;
 	  } else if( playerMove == 'd' )
 	  {
-		  o->pos.y -= 0.65;
+		  o->pos.y -= 0.8;
 	  } else if( playerMove == 'f' )
 	  {
 
@@ -122,8 +122,8 @@ void playerThink( engObj_s* o)
 
 void playerHit(engObj_s* a, engObj_s* b)
 {
-	eoObjDel(player);
-	eoExec("echo You suck.");
+	//eoObjDel(player);
+//	eoExec("echo You suck.");
 
 }
 
@@ -211,10 +211,10 @@ void initLevel(int l)
 	memset( moves, 0, MAXMOVES);
 	moves[i++] = 'd';
 	moves[i++] = 'd';
+	moves[i++] = 'u';
 	moves[i++] = 'd';
-	moves[i++] = 'd';
-	moves[i++] = 'd';
-	moves[i++] = 'd';
+	moves[i++] = 'u';
+	moves[i++] = 'u';
 	moves[i++] = 'd';
 
 	cmIdx = 0;
