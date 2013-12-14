@@ -14,7 +14,7 @@ LIBS = -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf -lopengl32 -l
 LIBS += -l:./libExcessiveOverkill_x86.dll
 DEFS = -DWIN32 -DWIN32_CROSS
 
-OBJS = main.o
+OBJS = main.o menu.o game.o
 
 ########################################################################
 
