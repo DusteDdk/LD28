@@ -253,7 +253,7 @@ void initLevel(int l)
 	eoLoadScene( Data("/data/lvl/", levelName), objInit);
 
 
-	for(i=0; i < 1500; i++)
+	for(i=0; i < 100; i++)
 	{
 		engObj_s* star = eoObjCreate(ENGOBJ_SPRITE);
 
