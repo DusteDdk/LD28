@@ -12,7 +12,6 @@ newmtl harness
 	Kd 0.058824 0.058824 0.058824
 	Ks 0.000000 0.000000 0.000000
 	Ke 0.000000 0.000000 0.000000
-	map_Kd Map__7_Noise.png
 
 newmtl tank
 	Ns 100
@@ -25,7 +24,6 @@ newmtl tank
 	Kd 0.607843 0.176471 0.176471
 	Ks 0.450000 0.450000 0.450000
 	Ke 0.000000 0.000000 0.000000
-	map_Kd Map__6_Noise.png
 
 newmtl oxygentank
 	Ns 100

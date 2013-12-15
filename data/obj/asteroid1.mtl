@@ -1,0 +1,13 @@
+# Blender3D MTL File: asteroid1.blend
+# Material Count: 1
+newmtl Material.001_astroid1.png
+Ns 266.666667
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.955487 0.955487 0.955487
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd asteroid1.png
+
+
