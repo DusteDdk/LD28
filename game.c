@@ -12,13 +12,16 @@
 int cmIdx = 0;
 int cmTl = 1000;
 int cmCd=0;
+GLfloat rot=0;
+GLfloat rotDir=1;
+GLfloat maxRot=30;
 
 #define MAXMOVES  128
 #define MOVETIME 200;
-#define COOLDOWN 400;
+#define COOLDOWN 500;
 
 engObj_s* player;
-sprite_base* heartSpriteBase;
+sprite_base* heartSpriteBase, *starSprBase;
 char moves[MAXMOVES];
 
 guiContext* hud;
@@ -26,14 +29,60 @@ int currentLevel = 0;
 
 GLfloat fieldStart,fieldStop;
 
+int state;
+#define GSTATE_NON 0
+#define GSTATE_SHOWLEVEL 1
+#define GSTATE_GETINPUT 2
+#define GSTATE_RUNLEVEL 3
+#define GSTATE_ENDLEVEL 4
+
 void gameShowLevel()
 {
 
+	//Progress to collectKeys
+	state = GSTATE_GETINPUT;
 }
 
 void gameCollectKeys()
 {
-  eoPrint("gameCollectKeys");
+	//Progress to flyThrough
+	engObj_s* rocket = eoObjCreate(ENGOBJ_MODEL);
+	rocket->model = eoModelLoad( "/data/obj/rocket/", "rocket.obj");
+	eoObjBake(rocket);
+	eoObjAttach(player, rocket);
+
+	engObj_s* parEmit = eoObjCreate(ENGOBJ_PAREMIT);
+	particleEmitter_s* playerEmitter = eoPsysNewEmitter();
+	playerEmitter->addictive=1;
+	playerEmitter->numParticlesPerEmission = 2;
+	playerEmitter->ticksBetweenEmissions = 1;
+	playerEmitter->particleLifeMax = 500;
+	playerEmitter->particleLifeVariance = 400;
+	playerEmitter->shrink=0;
+	playerEmitter->fade=0;
+	playerEmitter->percentFlicker=60;
+	playerEmitter->sizeMax=0.010;
+	playerEmitter->sizeVariance=0.005;
+	playerEmitter->rotateParticles=0;
+	playerEmitter->colorVariance[0]=0.1;
+	playerEmitter->colorVariance[1]=1;
+	playerEmitter->colorVariance[2]=1;
+	playerEmitter->colorVariance[3]=0;
+	playerEmitter->color[0]=1;
+	playerEmitter->color[1]=1;
+	playerEmitter->color[2]=1;
+	playerEmitter->emitSpeedMax=3;
+	playerEmitter->emitSpeedVariance=0.5;
+	playerEmitter->sprBase=heartSpriteBase;
+	eoPsysBake(playerEmitter);
+	parEmit->emitter = playerEmitter;
+	parEmit->offsetPos.x = -2.5;
+	parEmit->offsetPos.y = 0.5;
+	eoObjBake(parEmit);
+
+	eoObjAttach( player, parEmit );
+	state = GSTATE_RUNLEVEL;
+
 }
 
 char playerMove;
@@ -68,12 +117,7 @@ void gameEndLevel()
 }
 
 
-int state;
-#define GSTATE_NON 0
-#define GSTATE_SHOWLEVEL 1
-#define GSTATE_GETINPUT 2
-#define GSTATE_RUNLEVEL 3
-#define GSTATE_ENDLEVEL 4
+
 
 void frameStart()
 {
@@ -96,11 +140,22 @@ void frameStart()
 
 void playerThink( engObj_s* o)
 {
-  eoCamTargetSet(o->pos);
-  camGet()->target.x += 20;
-  camGet()->pos.x = o->pos.x+15;
-  o->rot.x +=3;
-  o->vel.x = 0.6;
+
+
+  camGet()->target.x =o->pos.x+ 10;
+  camGet()->pos.x = o->pos.x+5;
+  //o->rot.x +=3;
+  o->vel.x = 0.5;
+
+  o->rot.x+= 1*rotDir;
+  if( o->rot.x > maxRot || o->rot.x < -maxRot )
+  {
+	  rotDir *= -1;
+  }
+
+  GLfloat rot=0;
+  int rotDir=0;
+  GLfloat maxRot=15;
 
 
   if( playerMove )
@@ -127,15 +182,22 @@ void playerHit(engObj_s* a, engObj_s* b)
 
 }
 
+void scFunc(inputEvent* e)
+{
+	eoGfxScreenshot(NULL);
+}
+
+
 void initGame()
 {
 	hud = eoGuiContextCreate();
-	guiWindow_s* win = eoGuiAddWindow(hud,10,10,150,50, "" , NULL);
-	win->showTitle=FALSE;
 	state = GSTATE_NON;
 	eoRegisterStartFrameFunc(frameStart);
 
 	heartSpriteBase = eoSpriteBaseLoad( Data("/data/gfx/", "heartparticle.spr"));
+	starSprBase = eoSpriteBaseLoad( Data("/data/gfx/","defaultparticle.spr") );
+
+	eoInpAddFunc("screenshot", "Save a screenshot.", scFunc, INPUT_FLAG_UP);
 }
 
 void startNewGame()
@@ -146,7 +208,6 @@ void startNewGame()
 
 void objInit(engObj_s* o)
 {
-
 	if( strcmp(o->className, "obs" ) == 0 )
 	{
 		o->colTeam = 1;
@@ -160,46 +221,10 @@ void objInit(engObj_s* o)
 		o->colFunc = playerHit;
 		o->rot.y = 180;
 
-
-		  engObj_s* parEmit = eoObjCreate(ENGOBJ_PAREMIT);
-		  particleEmitter_s* playerEmitter = eoPsysNewEmitter();
-		  playerEmitter->addictive=1;
-		  playerEmitter->numParticlesPerEmission = 2;
-		  playerEmitter->ticksBetweenEmissions = 1;
-		  playerEmitter->particleLifeMax = 500;
-		  playerEmitter->particleLifeVariance = 400;
-		  playerEmitter->shrink=0;
-		  playerEmitter->fade=0;
-		  playerEmitter->percentFlicker=60;
-		  playerEmitter->sizeMax=0.010;
-		  playerEmitter->sizeVariance=0.005;
-		  playerEmitter->rotateParticles=0;
-		  playerEmitter->colorVariance[0]=0;
-		  playerEmitter->colorVariance[1]=0;
-		  playerEmitter->colorVariance[2]=0;
-		  playerEmitter->colorVariance[3]=0;
-		  playerEmitter->color[0]=1;
-		  playerEmitter->color[1]=1;
-		  playerEmitter->color[2]=1;
-		  playerEmitter->emitSpeedMax=3;
-		  playerEmitter->emitSpeedVariance=0.5;
-		  playerEmitter->sprBase=heartSpriteBase;
-		  eoPsysBake(playerEmitter);
-		  parEmit->emitter = playerEmitter;
-		  parEmit->offsetPos.x = -1.4;
-		  parEmit->offsetPos.y = 0.0;
-		  eoObjBake(parEmit);
-
-
-		  eoObjAttach( o, parEmit );
-
-
 	}
 
   eoObjBake(o);
   eoObjAdd(o);
-
-
 }
 
 void initLevel(int l)
@@ -208,7 +233,7 @@ void initLevel(int l)
 	currentLevel = l;
 
 	int i=0;
-	memset( moves, 0, MAXMOVES);
+	memset( moves, 0, MAXMOVES );
 	moves[i++] = 'd';
 	moves[i++] = 'd';
 	moves[i++] = 'u';
@@ -228,12 +253,27 @@ void initLevel(int l)
 	eoLoadScene( Data("/data/lvl/", levelName), objInit);
 
 
+	for(int i=0; i < 1500; i++)
+	{
+		engObj_s* star = eoObjCreate(ENGOBJ_SPRITE);
+
+		star->sprite=eoSpriteNew(starSprBase,1,1);
+		star->pos.x=-1000+eoRandFloat(4000);
+		star->pos.y=-1000+eoRandFloat(2000);
+		star->pos.z= -2000 + eoRandFloat(4000);
+		eoObjBake(star);
+		eoObjAdd(star);
+		star->sprite->scale.x = eoRandFloat(200)/1000.0f;
+		star->sprite->scale.y = star->sprite->scale.x;
+
+
+	}
 
   //eoObjAdd(playerObj);
-  camGet()->pos.z = 40;
+  camGet()->pos.z = 30;
   camGet()->target.x = 0;
   camGet()->target.y = 0;
   camGet()->target.z = 0;
 
-  state = GSTATE_RUNLEVEL;
+  state = GSTATE_SHOWLEVEL;
 }
