@@ -51,14 +51,14 @@ int main(int argc, char *argv[])
 
 
   //Set some GL light stuffs
-  GLfloat global_ambient[] = { 0.2f, 0.2f, 0.2f, 2.0f };
+ /* GLfloat global_ambient[] = { 0.2f, 0.2f, 0.2f, 2.0f };
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
   GLfloat pos[] = { 10,10,10,0 }; //Last pos: 0 = dir, 1=omni
   glLightfv( GL_LIGHT0, GL_POSITION, pos );
 
   GLfloat specular[] = {0.0, 0.0, 0.0, 1.0};
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);*/
 
 
   eoInpAddFunc( "exit", "Exit the game.", inpQuitFunc, INPUT_FLAG_DOWN);

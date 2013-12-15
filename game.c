@@ -7,12 +7,12 @@
 #include "libeo/eng.h"
 #include "game.h"
 
-
+vboModel* spaceMdl;
+engObj_s* spaceObj;
 
 int cmIdx = 0;
 int cmTl = 1000;
 int cmCd=0;
-GLfloat rot=0;
 GLfloat rotDir=1;
 GLfloat maxRot=30;
 
@@ -21,13 +21,13 @@ GLfloat maxRot=30;
 #define COOLDOWN 500;
 
 engObj_s* player;
-sprite_base* heartSpriteBase, *starSprBase;
+sprite_base* heartSpriteBase;
 char moves[MAXMOVES];
 
 guiContext* hud;
 int currentLevel = 0;
 
-GLfloat fieldStart,fieldStop;
+
 
 int state;
 #define GSTATE_NON 0
@@ -146,16 +146,15 @@ void playerThink( engObj_s* o)
   camGet()->pos.x = o->pos.x+5;
   //o->rot.x +=3;
   o->vel.x = 0.5;
-
+  spaceObj->pos = eoCamPosGet();
+  spaceObj->rot.y +=0.001;
+  spaceObj->rot.x +=0.0012;
   o->rot.x+= 1*rotDir;
   if( o->rot.x > maxRot || o->rot.x < -maxRot )
   {
 	  rotDir *= -1;
   }
 
-  GLfloat rot=0;
-  int rotDir=0;
-  GLfloat maxRot=15;
 
 
   if( playerMove )
@@ -190,12 +189,13 @@ void scFunc(inputEvent* e)
 
 void initGame()
 {
+  spaceMdl = eoModelLoad( "/data/obj/","space.obj");
+
 	hud = eoGuiContextCreate();
 	state = GSTATE_NON;
 	eoRegisterStartFrameFunc(frameStart);
 
 	heartSpriteBase = eoSpriteBaseLoad( Data("/data/gfx/", "heartparticle.spr"));
-	starSprBase = eoSpriteBaseLoad( Data("/data/gfx/","defaultparticle.spr") );
 
 	eoInpAddFunc("screenshot", "Save a screenshot.", scFunc, INPUT_FLAG_UP);
 }
@@ -246,34 +246,22 @@ void initLevel(int l)
 	cmTl = MOVETIME;
 	cmCd=( cmCd) *5 ;
 
-	fieldStart=0;
-	fieldStop=0;
 
 	sprintf(levelName, "level%i.lvl", l);
 	eoLoadScene( Data("/data/lvl/", levelName), objInit);
 
-
-	for(i=0; i < 100; i++)
-	{
-		engObj_s* star = eoObjCreate(ENGOBJ_SPRITE);
-
-		star->sprite=eoSpriteNew(starSprBase,1,1);
-		star->pos.x=-1000+eoRandFloat(4000);
-		star->pos.y=-1000+eoRandFloat(2000);
-		star->pos.z= -2000 + eoRandFloat(4000);
-		eoObjBake(star);
-		eoObjAdd(star);
-		star->sprite->scale.x = eoRandFloat(200)/1000.0f;
-		star->sprite->scale.y = star->sprite->scale.x;
-
-
-	}
 
   //eoObjAdd(playerObj);
   camGet()->pos.z = 30;
   camGet()->target.x = 0;
   camGet()->target.y = 0;
   camGet()->target.z = 0;
+
+  spaceObj = eoObjCreate(ENGOBJ_MODEL);
+  spaceObj->model = spaceMdl;
+  spaceObj->fullBright = TRUE;
+  eoObjBake(spaceObj);
+  eoObjAdd(spaceObj);
 
   state = GSTATE_SHOWLEVEL;
 }
