@@ -203,7 +203,7 @@ engObj_s* addGenericNME()
   ((nmeProp*)(o->gameData))->rxsp = eoRandFloat(1);
   ((nmeProp*)(o->gameData))->rysp = -1.0+eoRandFloat(2);
   o->pos.y = -11.0 + eoRandFloat(22.0);
-  eoPrint("ypos: %f", o->pos.y);
+
   o->pos.x = eoCamPosGet().x + 80;
   o->pos.z = 0;
   o->thinkFunc = nmeThink;
