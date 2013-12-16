@@ -202,7 +202,8 @@ engObj_s* addGenericNME()
   memset(((nmeProp*)(o->gameData)), 0, sizeof(nmeProp));
   ((nmeProp*)(o->gameData))->rxsp = eoRandFloat(1);
   ((nmeProp*)(o->gameData))->rysp = -1.0+eoRandFloat(2);
-  o->pos.y = -10 + eoRandFloat(20);
+  o->pos.y = -11.0 + eoRandFloat(22.0);
+  eoPrint("ypos: %f", o->pos.y);
   o->pos.x = eoCamPosGet().x + 80;
   o->pos.z = 0;
   o->thinkFunc = nmeThink;
@@ -756,7 +757,6 @@ void initLevel(int l)
 
   state = GSTATE_SHOWLEVEL;
   rcd=0;
-  srand( 151089 );
 
 
 }
