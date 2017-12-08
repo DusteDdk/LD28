@@ -11,12 +11,12 @@ endif
 TARGET= $(NAME)
 
 LDFLAGS=$(CFLAGS)
-LIBS = -lSDL -lSDL_image -lSDL_mixer -lpng -lm -lz -lpthread  -lGL -lGLU
+LIBS = -lSDL -lSDL_image -lSDL_mixer -lpng -lm -lz -lpthread  -lGL -lGLU -L.
 
 ifeq ($(ARCH),x86)
-  LIBS += -l:./libExcessiveOverkill_x86.so
+  	LIBS += -l:./ExcessiveOverkill_x86
 else
-  LIBS += -l:./libExcessiveOverkill_x64.so
+	LIBS += -l:./ExcessiveOverkill_x64
 endif
 
 OBJS = main.o menu.o game.o
